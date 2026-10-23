@@ -118,7 +118,7 @@ doxygen Doxyfile
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE.md) and [NOTICE](NOTICE).
+Apache License 2.0. See [LICENSE](LICENSE.md) and [NOTICE](NOTICE.md).
 
 ## Notes
 
