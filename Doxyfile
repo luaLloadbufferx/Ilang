@@ -1,0 +1,36 @@
+# doxygen Doxyfile
+
+PROJECT_NAME           = "Ilang"
+PROJECT_BRIEF          = "Ilang is a small, statically typed, compiled language that targets a register-based virtual machine."
+OUTPUT_DIRECTORY       = docs/doxygen
+
+INPUT                  = docs/mainpage.dox Ilangc Ilangdis IlangVM/main.c IlangVM/VM
+FILE_PATTERNS          = *.c *.h *.cpp *.hpp *.inc *.dox
+EXTENSION_MAPPING      = inc=C
+RECURSIVE              = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+SEARCH_INCLUDES        = NO
+PREDEFINED             = __GNUC__=13 \ ILANG_VM_COMPUTED_GOTO \ "__attribute__(x)=" \ "restrict=" \ "ILANG_DISPATCH=" \ "ILANG_GOTO_ATTR=" \ "ILANG_NOINLINE=static" \ "ILANG_INLINE=static inline"
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_ANON_NSPACES   = YES
+
+OPTIMIZE_OUTPUT_FOR_C  = NO
+JAVADOC_AUTOBRIEF      = NO
+MARKDOWN_SUPPORT       = YES
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HAVE_DOT               = NO
+QUIET                  = YES
+
+EXCLUDE_SYMBOLS        = X SLOW Q_OFF QGO QDISPATCH NEXT JUMP MEMPTR ARITH_I ARITH_U SHIFT_I SHIFT_U ARITH_F DIVMOD_I DIVMOD_U CJ_TAIL ELEM_LOCATE ELEM_FLAGS ELEM_TEMP UADDR DIRECT_Q
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES

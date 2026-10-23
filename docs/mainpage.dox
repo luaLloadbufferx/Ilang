@@ -1,0 +1,61 @@
+/**
+ * @mainpage Ilang
+ *
+ * Ilang is a small, statically typed language with its own compiler, virtual machine and disassembler. This is the
+ * reference for the source code of all three; the build instructions are in `README.md`.
+ *
+ * @code{.unparsed}
+ * program.i -> Ilangc -> program.ic -> IlangVM -> output
+ *                            |
+ *                            +------> Ilangdis -> listing
+ * @endcode
+ *
+ * @section main_compiler The compiler (Ilangc, C++17)
+ *
+ * The compiler lives in namespace `il` and is a classic pipeline. Start reading at `Ilangc/ilang.hpp`, which defines
+ * the shared vocabulary (types, tokens, the AST, the opcode list and the bytecode version).
+ *
+ *  - @ref il::Lexer (`lexer.hpp`) turns source text into tokens.
+ *  - @ref il::Parser (`parser.hpp`) builds the syntax tree.
+ *  - @ref il::Compiler and @ref il::FuncGen (`codegen.hpp`) type-check the tree and emit bytecode: register
+ *    allocation, spilling, the calling convention and the `.ic` file layout (header, import table, extension sections).
+ *  - `main.cpp` is the command line driver.
+ *
+ * @section main_vm The virtual machine (IlangVM, C11)
+ *
+ * The VM loads a `.ic` file and runs it. `IlangVM/VM/IlangVM.h` is the place to start: it defines the value and state
+ * types, every opcode with its encoding, and the embedding API (IlangVM_start(), IlangVM_call(), IlangVM_finish()).
+ *
+ *  - `IlangVM.c`: the loader and the interpreter loops (portable `switch`, computed goto, and the lazily quickened loop
+ *    in `IlangVM_quick.inc`, the default on gcc and clang).
+ *  - `IlangVM_Mem.c`: the memory manager (a sorted block table, a small-buffer pool, the memory limit).
+ *  - `IlangVM_fetch.c`, `IlangVM_locals.c`, `IlangVM_cast.c`, `IlangVM_panic.c`: operand decoding, stack frames, type
+ *    conversion and runtime errors.
+ *  - `IlangHost.h`, `IlangVM_host.c`: calling C from Ilang (`extern fn`) and Ilang from C (`export fn`).
+ *  - `IlangConf.h`: sizes and limits. The optional features are listed on the @ref build_switches page.
+ *  - `main.c`: the `ilangvm` command line program.
+ *
+ * @section main_dis The disassembler (Ilangdis, C11)
+ *
+ * Ilangdis reads a `.ic` file and prints a listing of its code. The bytecode has no symbols, so the disassembler
+ * works them out: it decodes the code, follows every jump and call, cuts the code into functions, names them and
+ * numbers the labels. It uses the opcode, type and signature definitions of `IlangVM/VM/IlangVM.h` directly, and a
+ * static assertion fails the build if an opcode is added to the VM before the disassembler's table is extended. Start reading at `Ilangdis/ilangdis.h`, which holds the data
+ * model and the API of every module. The stages, in the order the data flows:
+ *
+ *  - `image.c`: dis_image_parse() reads the header, the import table and the extension sections (including `EXPT`)
+ *    with the same checks as the VM's loader.
+ *  - `decode.c`: dis_decode() decodes one instruction into a DisInsn. It needs no state, so a byte that is not an
+ *    opcode only costs that byte (it is shown as `.byte`) and decoding continues at the next one.
+ *  - `analyze.c`: dis_analyze() sweeps the code, resolves jump and call targets, finds the function boundaries, names the
+ *    functions, collects the cross references and names the labels. The rules are described at DisProgram and in the
+ *    comments of the steps.
+ *  - `arrows.c`: the arrow margin. dis_arrows_build() packs the jumps and calls into lanes, dis_arrows_print() draws the
+ *    part of the margin that belongs to one line of the listing.
+ *  - `format.c`, `printer.c`, `output.h`: the text of an instruction and the colour-aware DisPrinter that tracks
+ *    columns, so UTF-8 box-drawing characters line up.
+ *  - `listing.c`: the listing itself (header, banners, labels, byte view) and the reports: dis_print_listing(),
+ *    dis_print_info(), dis_print_functions() and dis_print_callgraph().
+ *  - `main.c`: the `ilangdis` command line program.
+ *  - `util.c`: allocation helpers that exit on out-of-memory.
+ */

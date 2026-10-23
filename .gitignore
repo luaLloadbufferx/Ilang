@@ -1,0 +1,31 @@
+# Compiled Ilang bytecode. ilangc generates it; build.sh / build.bat rebuild the training programs in IlangVM/pgo/.
+*.ic
+
+# Built tools
+ilangc
+ilangdis
+ilangvm
+# The names above also match the source directories on case-insensitive filesystems (Windows/macOS).
+!/Ilangc/
+!/Ilangdis/
+!/IlangVM/
+*.exe
+*.dll
+*.so
+
+# Profile-guided build data (gcc)
+*.gcda
+*.gcno
+
+# Doxygen output
+/docs/doxygen/
+
+# MSVC / Visual Studio
+*.obj
+*.pdb
+*.ilk
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
