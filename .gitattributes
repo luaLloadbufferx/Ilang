@@ -1,0 +1,4 @@
+# GitHub's language detection: Ilang is not a known language, and ".i" is claimed by SWIG.
+*.i linguist-language=Text
+# ".inc" is ambiguous (PHP, Pascal, Assembly, ...); IlangVM_quick.inc is C code.
+*.inc linguist-language=C

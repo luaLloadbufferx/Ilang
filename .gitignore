@@ -20,6 +20,9 @@ ilangvm
 # Doxygen output
 /docs/doxygen/
 
+# Release binaries
+/Releases/
+
 # MSVC / Visual Studio
 *.obj
 *.pdb
